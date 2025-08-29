@@ -15,9 +15,17 @@ import os
 from datetime import timedelta
 import warnings
 from urllib.parse import urlparse
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL")
+    )
+}
 
 
 # Quick-start development settings - unsuitable for production
