@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: campuscare-backend
+    runtime: python
+    rootDirectory: Backend
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.2
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+    startCommand: gunicorn CampusCare.wsgi
+    postDeployCommand: python manage.py migrate --noinput
