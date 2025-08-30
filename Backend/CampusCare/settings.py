@@ -20,12 +20,7 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL")
-    )
-}
+ 
 
 
 # Quick-start development settings - unsuitable for production
@@ -35,7 +30,7 @@ DATABASES = {
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'true').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost' ).split(',')
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost,.onrender.com').split(',')
 
 
 # Application definition
@@ -98,17 +93,12 @@ WSGI_APPLICATION = 'CampusCare.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# Prefer DATABASE_URL (Render Postgres), fallback to local sqlite.
 DATABASES = {
-    'default': {
-    'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
-    'NAME': os.getenv('DB_NAME', str(BASE_DIR / 'db.sqlite3')),
-    'USER': os.getenv('DB_USER', ''),
-    'PASSWORD': os.getenv('DB_PASSWORD', ''),
-    'HOST': os.getenv('DB_HOST', ''),
-    'PORT': os.getenv('DB_PORT', ''),
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 # Custom user model uses the canonical auth_user table via db_table override
